@@ -1,0 +1,95 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client_bonus.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/27 07:59:30 by mateo             #+#    #+#             */
+/*   Updated: 2024/03/27 08:44:11 by mateo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minitalk_bonus.h"
+
+void	error_exit(char *msg)
+{
+	write(2, msg, ft_strlen(msg));
+	write(2, "\n", 1);
+	exit(1);
+}
+
+void	decode_signal(int sig)
+{
+	if (sig == SIGUSR1)
+		write(1, "Message received\n", 17);
+}
+
+void	receive_signal(void)
+{
+	struct sigaction	sa;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_handler = &decode_signal;
+	sa.sa_flags = 0;
+	// sa.sa_flags = SA_RESETHAND;	// test with and without
+	if (sigaction(SIGUSR1, &sa, 0) == -1)
+		error_exit("Failed sigaction for SIGUSR1");
+	// if (sigaction(SIGUSR2, &sa, 0) == -1)
+	// 	error_exit("Failed sigaction for SIGUSR2");
+}
+
+pid_t	check_input(int argc, char **argv)
+{
+	int i;
+
+	if (argc != 3)
+		error_exit("Wrong number of arguments");
+	i = 0;
+	while(argv[1][i])
+	{
+		if (!ft_isdigit(argv[1][i]))
+			error_exit("PID given is not made of digits");
+		i++;
+	}
+	// if (argv[2][0] == '\0')
+	// 	error_exit("Empty message given");
+	return (ft_atoi(argv[1]));
+}
+
+void	send_signal(pid_t pid, char *msg)
+{
+	int	i;
+	int	b;
+
+	i = 0;
+	while (msg[i]) // want to send null?
+	{
+		b = 0;
+		while (b < 7)
+		{
+			if (msg[i] >> b & 1)
+			{
+				if (kill(pid, SIGUSR1) == -1)
+					error_exit("Failed to send SIGUSR1");
+			}
+			else
+			{
+				if (kill(pid, SIGUSR2) == -1)
+					error_exit("Failed to send SIGUSR2");
+			}
+			b++;
+		}	
+		i++;
+	}
+}
+
+int	main(int argc, char **argv)
+{
+	pid_t	server_pid;
+
+	server_pid = check_input(argc, argv);
+	send_signal(server_pid, argv[1]);
+	receive_signal();
+	return (0);
+}
