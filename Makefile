@@ -18,10 +18,10 @@ all: server client
 	cc ${CFLAGS} -c $< -o ${<:.c=.o}
 
 server:	$(SERVER_OFILES) $(LIBFT)
-	cc $(CFLAGS) $(SERVER_OFILES) $(LIBFT) -o server
+	cc $(CFLAGS) $(SERVER_OFILES) $(LIBFT_DIR)/$(LIBFT) -o server
 
 client: $(CLIENT_OFILES) $(LIBFT)
-	cc $(CFLAGS) $(CLIENT_OFILES) $(LIBFT) -o server
+	cc $(CFLAGS) $(CLIENT_OFILES) $(LIBFT_DIR)/$(LIBFT) -o client
 
 $(LIBFT):
 	make -C $(LIBFT_DIR)
@@ -29,10 +29,10 @@ $(LIBFT):
 bonus: server_bonus client_bonus
 
 server_bonus: $(SERVER_BONUS_OFILES) $(LIBFT)
-	cc $(CFLAGS) $(SERVER_BONUS_OFILES) $(LIBFT) -o server_bonus
+	cc $(CFLAGS) $(SERVER_BONUS_OFILES) $(LIBFT_DIR)/$(LIBFT) -o server_bonus
 
 client_bonus: $(CLIENT_BONUS_OFILES)
-	cc $(CFLAGS) $(CLIENT_BONUS_OFILES) $(LIBFT) -o client_bonus
+	cc $(CFLAGS) $(CLIENT_BONUS_OFILES) $(LIBFT_DIR)/$(LIBFT) -o client_bonus
 
 clean:
 	make clean -C $(LIBFT_DIR)
@@ -41,8 +41,8 @@ clean:
 
 fclean: clean
 	make fclean -C $(LIBFT_DIR)
-	rm server client
-	rm server_bonus client_bonus
+	rm -f server client
+	rm -f server_bonus client_bonus
 
 re: fclean all
 

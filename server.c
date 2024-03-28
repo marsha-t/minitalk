@@ -6,20 +6,11 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 20:40:30 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/27 08:47:15 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/27 10:47:02 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
-
-int ft_strlen(char *str)
-{
-	int i;
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
 
 void	error_exit(char *msg)
 {
@@ -33,12 +24,10 @@ void	decode_signal(int sig)
 	static int				b;
 	static unsigned char	c;
 
-	c = 0;
-	b = 0;
 	if (sig == SIGUSR1)
-		c = (c << b) + 1;
+		c = (c << 1) + 1;
 	else if (sig == SIGUSR2)
-		c = (c << b);
+		c = (c << 1);
 	b++;
 	if (b == 8)
 	{
@@ -62,10 +51,8 @@ void	receive_signal(void)
 
 int	main(void)
 {
-	pid_t	pid;
-	
 	write(1, "PID: ", 5);
-	ft_putnbr_fd(get_pid(), 1);
+	ft_putnbr_fd(getpid(), 1);
 	write(1, "\n", 1);
 	while (1)
 	{

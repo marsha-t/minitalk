@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 07:59:30 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/27 08:44:11 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/27 13:50:26 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	error_exit(char *msg)
 void	decode_signal(int sig)
 {
 	if (sig == SIGUSR1)
-		write(1, "Message received\n", 17);
+		write(1, "Character received\n", 19);
 }
 
 void	receive_signal(void)
@@ -32,11 +32,8 @@ void	receive_signal(void)
 	sigemptyset(&sa.sa_mask);
 	sa.sa_handler = &decode_signal;
 	sa.sa_flags = 0;
-	// sa.sa_flags = SA_RESETHAND;	// test with and without
 	if (sigaction(SIGUSR1, &sa, 0) == -1)
 		error_exit("Failed sigaction for SIGUSR1");
-	// if (sigaction(SIGUSR2, &sa, 0) == -1)
-	// 	error_exit("Failed sigaction for SIGUSR2");
 }
 
 pid_t	check_input(int argc, char **argv)
@@ -52,8 +49,8 @@ pid_t	check_input(int argc, char **argv)
 			error_exit("PID given is not made of digits");
 		i++;
 	}
-	// if (argv[2][0] == '\0')
-	// 	error_exit("Empty message given");
+	if (argv[2][0] == '\0')
+		error_exit("Empty message given");
 	return (ft_atoi(argv[1]));
 }
 
@@ -63,10 +60,10 @@ void	send_signal(pid_t pid, char *msg)
 	int	b;
 
 	i = 0;
-	while (msg[i]) // want to send null?
+	while (msg[i])
 	{
-		b = 0;
-		while (b < 7)
+		b = 7;
+		while (b >= 0)
 		{
 			if (msg[i] >> b & 1)
 			{
@@ -78,7 +75,8 @@ void	send_signal(pid_t pid, char *msg)
 				if (kill(pid, SIGUSR2) == -1)
 					error_exit("Failed to send SIGUSR2");
 			}
-			b++;
+			usleep(50);
+			b--;
 		}	
 		i++;
 	}
@@ -89,7 +87,11 @@ int	main(int argc, char **argv)
 	pid_t	server_pid;
 
 	server_pid = check_input(argc, argv);
-	send_signal(server_pid, argv[1]);
 	receive_signal();
+	send_signal(server_pid, argv[2]);
+	while(1)
+	{
+		pause();
+	}
 	return (0);
 }

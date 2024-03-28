@@ -6,11 +6,12 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 05:42:05 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/27 06:40:47 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/27 13:53:14 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
+#include <stdio.h>
 
 void	error_exit(char *msg)
 {
@@ -45,8 +46,8 @@ void	send_signal(pid_t pid, char *msg)
 	i = 0;
 	while (msg[i]) // want to send null?
 	{
-		b = 0;
-		while (b < 7)
+		b = 7;
+		while (b >= 0)
 		{
 			if (msg[i] >> b & 1)
 			{
@@ -58,7 +59,8 @@ void	send_signal(pid_t pid, char *msg)
 				if (kill(pid, SIGUSR2) == -1)
 					error_exit("Failed to send SIGUSR2");
 			}
-			b++;
+			usleep(100);
+			b--;
 		}	
 		i++;
 	}
@@ -70,7 +72,9 @@ int	main(int argc, char **argv)
 
 	server_pid = check_input(argc, argv);
 	send_signal(server_pid, argv[2]);
-	while (1)
+	while(1)
+	{
 		pause();
+	}
 	return (0);
 }
