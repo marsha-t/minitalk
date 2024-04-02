@@ -6,25 +6,21 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 07:59:30 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/27 13:50:26 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 17:41:33 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk_bonus.h"
+#include "minitalk.h"
 
-void	error_exit(char *msg)
-{
-	write(2, msg, ft_strlen(msg));
-	write(2, "\n", 1);
-	exit(1);
-}
-
+/*	decode_signal prints whenever SIGUSR1 is received */
 void	decode_signal(int sig)
 {
 	if (sig == SIGUSR1)
 		write(1, "Character received\n", 19);
 }
 
+/*	receive_signal sets up the signal handlers for SIGUSR1
+	When signal is received, decode_signal is called*/
 void	receive_signal(void)
 {
 	struct sigaction	sa;
@@ -36,14 +32,18 @@ void	receive_signal(void)
 		error_exit("Failed sigaction for SIGUSR1");
 }
 
+/*	check_input checks 
+	- right no. of arguments given
+	- only numeric input for PID
+	- non-empty mesage */
 pid_t	check_input(int argc, char **argv)
 {
-	int i;
+	int	i;
 
 	if (argc != 3)
 		error_exit("Wrong number of arguments");
 	i = 0;
-	while(argv[1][i])
+	while (argv[1][i])
 	{
 		if (!ft_isdigit(argv[1][i]))
 			error_exit("PID given is not made of digits");
@@ -54,6 +54,8 @@ pid_t	check_input(int argc, char **argv)
 	return (ft_atoi(argv[1]));
 }
 
+/*	send_signal breaks up each character to send by bit
+	SIGUSR1 = 1; SIGUSR2 = 0 */
 void	send_signal(pid_t pid, char *msg)
 {
 	int	i;
@@ -73,15 +75,17 @@ void	send_signal(pid_t pid, char *msg)
 			else
 			{
 				if (kill(pid, SIGUSR2) == -1)
-					error_exit("Failed to send SIGUSR2");
+					error_exit("Failed to send SIGUSR2 - client");
 			}
-			usleep(50);
+			usleep(300);
 			b--;
-		}	
+		}
 		i++;
 	}
 }
 
+/* main checks the input, sets up signal handlers, 
+	sends signals to server and waits for signals */
 int	main(int argc, char **argv)
 {
 	pid_t	server_pid;
@@ -89,9 +93,5 @@ int	main(int argc, char **argv)
 	server_pid = check_input(argc, argv);
 	receive_signal();
 	send_signal(server_pid, argv[2]);
-	while(1)
-	{
-		pause();
-	}
 	return (0);
 }

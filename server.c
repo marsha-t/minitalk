@@ -6,12 +6,13 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 20:40:30 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/27 10:47:02 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 17:32:51 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
+/*	error_exit prints an error message to stderr before exiting */
 void	error_exit(char *msg)
 {
 	write(2, msg, ft_strlen(msg));
@@ -19,6 +20,8 @@ void	error_exit(char *msg)
 	exit(1);
 }
 
+/*	decode_signal compiles signals until 8 bits are received
+	before printing the character */
 void	decode_signal(int sig)
 {
 	static int				b;
@@ -37,6 +40,8 @@ void	decode_signal(int sig)
 	}
 }
 
+/*	receive_signal sets up the signal handlers for SIGUSR1 and SIGUSR2
+	When either signal is received, decode_signal is called*/
 void	receive_signal(void)
 {
 	struct sigaction	sa;
@@ -49,6 +54,7 @@ void	receive_signal(void)
 		error_exit("Failed sigaction for SIGUSR2");
 }
 
+/*	main prints the PID and stays running to receive signals*/
 int	main(void)
 {
 	write(1, "PID: ", 5);

@@ -6,12 +6,13 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 06:42:44 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/27 13:39:33 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 17:35:50 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk_bonus.h"
+#include "minitalk.h"
 
+/*	error_exit prints an error message to stderr before exiting */
 void	error_exit(char *msg)
 {
 	write(2, msg, ft_strlen(msg));
@@ -19,6 +20,8 @@ void	error_exit(char *msg)
 	exit(1);
 }
 
+/*	decode_signal compiles signals until 8 bits are received
+	before printing the character AND sending SIGUSR1 back to client */
 void	decode_signal(int sig, siginfo_t *info, void *ucontext)
 {
 	static int				b;
@@ -26,25 +29,24 @@ void	decode_signal(int sig, siginfo_t *info, void *ucontext)
 
 	(void)ucontext;
 	if (sig == SIGUSR1)
-	{
 		c = (c << 1) + 1;
-	}
 	else if (sig == SIGUSR2)
-	{
 		c = (c << 1);
-		
-	}
 	b++;
 	if (b == 8)
 	{
 		write(1, &c, 1);
 		b = 0;
 		c = 0;
+		(void)info;
 		if (kill(info->si_pid, SIGUSR1) == -1)
 			error_exit("Failed to send SIGUSR1");
 	}
 }
 
+/*	receive_signal sets up the signal handlers for SIGUSR1 and SIGUSR2
+	When either signal is received, decode_signal is called
+	sigaction is used to obtain the client PID*/
 void	receive_signal(void)
 {
 	struct sigaction	sa;
@@ -58,6 +60,7 @@ void	receive_signal(void)
 		error_exit("Failed sigaction for SIGUSR2");
 }
 
+/*	main prints the PID and stays running to receive signals*/
 int	main(void)
 {
 	write(1, "PID: ", 5);

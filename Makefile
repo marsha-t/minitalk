@@ -3,9 +3,9 @@ SERVER_OFILES = ${SERVER_CFILES:.c=.o}
 CLIENT_CFILES = client.c
 CLIENT_OFILES = ${CLIENT_CFILES:.c=.o}
 
-SERVER_BONUS_CFILES = server_bonus.c
+SERVER_BONUS_CFILES = server_bonus.c 
 SERVER_BONUS_OFILES = ${SERVER_BONUS_CFILES:.c=.o}
-CLIENT_BONUS_CFILES = client_bonus.c
+CLIENT_BONUS_CFILES = client_bonus.c error_bonus.c
 CLIENT_BONUS_OFILES = ${CLIENT_BONUS_CFILES:.c=.o}
 
 LIBFT = libft.a
