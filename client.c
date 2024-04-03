@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 05:42:05 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/02 17:33:34 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/03 08:54:33 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void	error_exit(char *msg)
 pid_t	check_input(int argc, char **argv)
 {
 	int	i;
-
+	int	num;
+	
 	if (argc != 3)
 		error_exit("Wrong number of arguments");
 	i = 0;
@@ -40,7 +41,10 @@ pid_t	check_input(int argc, char **argv)
 	}
 	if (argv[2][0] == '\0')
 		error_exit("Empty message given");
-	return (ft_atoi(argv[1]));
+	num = ft_atoi(argv[1]);
+	if (num == 0)
+		error_exit("PID of 0 not appropriate for minitalk");
+	return (num);
 }
 
 /*	send_signal breaks up each character to send by bit 
