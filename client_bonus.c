@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 07:59:30 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/03 08:55:32 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/03 10:52:13 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	send_signal(pid_t pid, char *msg)
 			else
 			{
 				if (kill(pid, SIGUSR2) == -1)
-					error_exit("Failed to send SIGUSR2 - client");
+					error_exit("Failed to send SIGUSR2");
 			}
 			usleep(300);
 			b--;

@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 06:42:44 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/02 17:35:50 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/03 10:51:02 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,16 @@ void	error_exit(char *msg)
 	before printing the character AND sending SIGUSR1 back to client */
 void	decode_signal(int sig, siginfo_t *info, void *ucontext)
 {
-	static int				b;
-	static unsigned char	c;
-
+	static	int				b;
+	static	unsigned char	c;
+	static	pid_t	ori_client;
+	
 	(void)ucontext;
+	if (!(ori_client == 0 || ori_client == info->si_pid)) // if pid = 0?
+		usleep(10);
+		// return; 
+	if (ori_client == 0)
+		ori_client = info->si_pid;
 	if (sig == SIGUSR1)
 		c = (c << 1) + 1;
 	else if (sig == SIGUSR2)
