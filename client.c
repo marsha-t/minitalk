@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 05:42:05 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/04 11:54:25 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/04 12:02:23 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ pid_t	check_input(int argc, char **argv)
 {
 	int	i;
 	int	num;
-	
+
 	if (argc != 3)
 		error_exit("Wrong number of arguments");
 	i = 0;

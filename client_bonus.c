@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 07:59:30 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/04 11:44:42 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/04 12:02:17 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 void	decode_signal(int sig)
 {
 	if (sig == SIGUSR1)
-		write(1, "Character received\n", 19);
+		write(1, "Message received\n", 17);
 }
 
 /*	receive_signal sets up the signal handlers for SIGUSR1
@@ -60,13 +60,13 @@ pid_t	check_input(int argc, char **argv)
 
 /*	send_signal breaks up each character to send by bit
 	SIGUSR1 = 1; SIGUSR2 = 0 */
-void	send_signal(pid_t pid, char *msg)
+void	send_signal(pid_t pid, char *msg, int len)
 {
 	int	i;
 	int	b;
 
 	i = 0;
-	while (msg[i])
+	while (i <= len)
 	{
 		b = 7;
 		while (b >= 0)
@@ -96,6 +96,6 @@ int	main(int argc, char **argv)
 
 	server_pid = check_input(argc, argv);
 	receive_signal();
-	send_signal(server_pid, argv[2]);
+	send_signal(server_pid, argv[2], ft_strlen(argv[2]));
 	return (0);
 }
