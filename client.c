@@ -6,12 +6,11 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 05:42:05 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/03 08:54:33 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/04 11:54:25 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
-#include <stdio.h>
 
 /*	error_exit prints an error message to stderr before exiting */
 void	error_exit(char *msg)
